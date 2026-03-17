@@ -109,7 +109,7 @@ const Configuracao = mongoose.model("Configuracao", {
   data: String,
   bloqueados: [String],
   extras: [String],
-  vagas: { type: Map, of: Number, default: {}} // Ex: 07:00: 2
+  vagas: { type: Map, of: Number, default: {} }
 });
 
 // Buscar configuração de um dia

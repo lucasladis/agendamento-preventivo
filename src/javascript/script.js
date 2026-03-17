@@ -475,6 +475,8 @@ async function salvarConfiguracao() {
     return;
   }
 
+  console.log("vagasAdmin antes de salvar:", vagasAdmin);
+
   try {
     const response = await fetch(`${API_URL}/configuracao`, {
       method: "POST",

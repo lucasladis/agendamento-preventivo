@@ -79,31 +79,28 @@ app.get("/agendamentos", async (req, res) => {
 
 //? ROTA PARA HORARIOS  
 
-app.get("/horarios/:data", async (req,res) => {
+app.get("/horarios/:data", async (req, res) => {
   try {
-    const agendamentos = await Agendamento.find( { datanasc: req.params.data } );
+    const agendamentos = await Agendamento.find({ datanasc: req.params.data });
     const config = await Configuracao.findOne({ data: req.params.data });
-
-    // conta quantos agendamentos tem por hora
 
     const contagem = {};
     agendamentos.forEach(a => {
       contagem[a.hora] = (contagem[a.hora] || 0) + 1;
     });
 
-    // verifica os horarios que estão cheios
-
     const ocupados = [];
     for (const [hora, count] of Object.entries(contagem)) {
-      const vagas = config?.vagas?.get(hora) || 1;
-      if (count >= 1) ocupados.push(hora);
+      const vagas = config?.vagas?.get(hora) || 1; // ← usa as vagas configuradas
+      if (count >= vagas) ocupados.push(hora); // ← corrigido!
     }
-  }
 
-  catch(error) {
-    res.status(500).json({ error: err.message })
+    res.json(ocupados); // ← faltava isso!
+
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
   }
-})
+});
 
 const Configuracao = mongoose.model("Configuracao", {
   data: String,

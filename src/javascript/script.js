@@ -432,13 +432,32 @@ function renderizarExtras() {
   }
 
   extrasAdmin.sort().forEach(h => {
+    const vagas = vagasAdmin[h] || 1;
+
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("horario-admin-item");
+
     const btn = document.createElement("button");
     btn.textContent = `${h} ✕`;
     btn.classList.add("btn-horario", "liberado");
     btn.type = "button";
     btn.title = "Clique para remover";
     btn.addEventListener("click", () => removerExtra(h));
-    listaExtras.appendChild(btn);
+
+    const inputVagas = document.createElement("input");
+    inputVagas.type = "number";
+    inputVagas.min = "1";
+    inputVagas.max = "10";
+    inputVagas.value = vagas;
+    inputVagas.classList.add("input-vagas");
+    inputVagas.title = "Vagas disponíveis";
+    inputVagas.addEventListener("change", () => {
+      vagasAdmin[h] = parseInt(inputVagas.value) || 1;
+    });
+
+    wrapper.appendChild(btn);
+    wrapper.appendChild(inputVagas);
+    listaExtras.appendChild(wrapper);
   });
 }
 

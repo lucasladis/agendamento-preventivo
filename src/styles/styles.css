@@ -6,9 +6,49 @@
 
 body {
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #f3e8ff 0%, #ede9fe 50%, #ddd6fe 100%);
   min-height: 100vh;
   color: #222;
+  background: linear-gradient(-45deg, #f3e8ff, #fce7f3, #ede9fe, #fdf2f8);
+  background-size: 400% 400%;
+  animation: aguaRosa 8s ease infinite;
+}
+
+@keyframes aguaRosa {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ==================== BOLHAS ==================== */
+
+.bolhas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bolha {
+  position: absolute;
+  bottom: -150px;
+  border-radius: 50%;
+  background: rgba(232, 157, 255, 0.15);
+  animation: subir linear infinite;
+}
+
+.bolha:nth-child(1) { width: 80px;  height: 80px;  left: 10%; animation-duration: 12s; animation-delay: 0s; }
+.bolha:nth-child(2) { width: 50px;  height: 50px;  left: 25%; animation-duration: 9s;  animation-delay: 2s; }
+.bolha:nth-child(3) { width: 120px; height: 120px; left: 40%; animation-duration: 15s; animation-delay: 1s; }
+.bolha:nth-child(4) { width: 60px;  height: 60px;  left: 55%; animation-duration: 10s; animation-delay: 3s; }
+.bolha:nth-child(5) { width: 90px;  height: 90px;  left: 70%; animation-duration: 13s; animation-delay: 0.5s; }
+.bolha:nth-child(6) { width: 40px;  height: 40px;  left: 85%; animation-duration: 8s;  animation-delay: 4s; }
+
+@keyframes subir {
+  0%   { transform: translateY(0) scale(1);       opacity: 0.6; }
+  50%  { transform: translateY(-50vh) scale(1.1); opacity: 0.3; }
+  100% { transform: translateY(-110vh) scale(0.8); opacity: 0; }
 }
 
 label {
@@ -31,7 +71,8 @@ label {
   justify-content: space-between;
   align-items: center;
   padding: 14px 24px;
-  background: white;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
   box-shadow: 0 2px 16px rgba(124, 58, 237, 0.1);
   border-bottom: 1px solid rgba(232, 157, 255, 0.3);
 }
@@ -76,7 +117,8 @@ label {
   top: 57px;
   right: 16px;
   z-index: 101;
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
   border-radius: 14px;
   box-shadow: 0 8px 30px rgba(124, 58, 237, 0.15);
   border: 1px solid rgba(232, 157, 255, 0.3);
@@ -119,17 +161,26 @@ label {
   max-width: 900px;
   margin: 0 auto;
   padding: 30px 20px;
+  position: relative;
+  z-index: 1;
 }
 
 /* ==================== CARDS ==================== */
 
 .card {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
   border-radius: 20px;
   padding: 28px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 10px 30px rgba(139, 92, 246, 0.08);
   margin-bottom: 20px;
-  border: 1px solid rgba(232, 157, 255, 0.2);
+  border: 1px solid rgba(232, 157, 255, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 40px rgba(139, 92, 246, 0.15);
 }
 
 h1 {
@@ -171,7 +222,7 @@ h1 {
   font-size: 14px;
   width: 100%;
   border: 1.5px solid #e5e7eb;
-  background: #fafafa;
+  background: rgba(255,255,255,0.8);
   color: #111;
   outline: none;
   transition: all 0.2s;
@@ -222,7 +273,7 @@ h1 {
   padding: 10px 6px;
   border-radius: 10px;
   border: 1.5px solid #e9d5ff;
-  background: #faf5ff;
+  background: rgba(250, 245, 255, 0.8);
   color: #7c3aed;
   font-weight: 700;
   font-size: 13px;
@@ -304,7 +355,7 @@ h1 {
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(15, 10, 30, 0.45);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -312,7 +363,8 @@ h1 {
 }
 
 .modal-box {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 32px;
   width: 370px;
@@ -324,6 +376,12 @@ h1 {
   gap: 16px;
   box-shadow: 0 20px 60px rgba(124, 58, 237, 0.2);
   border: 1px solid rgba(232, 157, 255, 0.3);
+  animation: popUp 0.2s ease;
+}
+
+@keyframes popUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 .modal-box h2 {
@@ -395,15 +453,16 @@ h1 {
 }
 
 .item-agendamento {
-  background: linear-gradient(135deg, #faf5ff, #f5f3ff);
+  background: linear-gradient(135deg, rgba(250,245,255,0.9), rgba(245,243,255,0.9));
   border-left: 4px solid #a855f7;
   padding: 16px;
   border-radius: 12px;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .item-agendamento:hover {
-  transform: translateX(3px);
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.1);
 }
 
 .item-agendamento p {
@@ -422,29 +481,7 @@ h1 {
   font-size: 0.9rem;
 }
 
-/* ==================== RESPONSIVO ==================== */
-
-@media (max-width: 700px) {
-  .formulario {
-    grid-template-columns: 1fr;
-  }
-
-  .formulario button {
-    grid-column: span 1;
-  }
-
-  .formulario .campo.span2 {
-    grid-column: span 1;
-  }
-
-  .grade-horarios {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .navbar-titulo {
-    font-size: 14px;
-  }
-}
+/* ==================== IMAGEM TOPO ==================== */
 
 .imagem-topo {
   display: block;
@@ -536,7 +573,6 @@ span.flatpickr-weekday {
   box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4) !important;
 }
 
-
 .flatpickr-day.disabled,
 .flatpickr-day.disabled:hover {
   color: #e5e7eb !important;
@@ -555,6 +591,8 @@ span.flatpickr-weekday {
   background: #e9d5ff !important;
 }
 
+/* ==================== ADMIN VAGAS ==================== */
+
 .horario-admin-item {
   display: flex;
   flex-direction: column;
@@ -572,9 +610,34 @@ span.flatpickr-weekday {
   outline: none;
   color: #7c3aed;
   font-weight: 700;
+  background: rgba(255,255,255,0.8);
 }
 
 .input-vagas:focus {
   border-color: #a855f7;
   box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.12);
+}
+
+/* ==================== RESPONSIVO ==================== */
+
+@media (max-width: 700px) {
+  .formulario {
+    grid-template-columns: 1fr;
+  }
+
+  .formulario button {
+    grid-column: span 1;
+  }
+
+  .formulario .campo.span2 {
+    grid-column: span 1;
+  }
+
+  .grade-horarios {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .navbar-titulo {
+    font-size: 14px;
+  }
 }

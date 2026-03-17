@@ -14,6 +14,15 @@
 
 <body>
 
+  <div class="bolhas">
+    <div class="bolha"></div>
+    <div class="bolha"></div>
+    <div class="bolha"></div>
+    <div class="bolha"></div>
+    <div class="bolha"></div>
+    <div class="bolha"></div>
+  </div>
+
   <img src="Design sem nome.png" alt="imagempreventivo" class="imagem-topo" />
 
   <!-- Navbar -->
@@ -137,7 +146,8 @@
               style="flex:1; padding:10px; border-radius:10px; border:1.5px solid #e5e7eb; font-size:14px; outline:none;" />
             <button type="button" onclick="adicionarExtra()" class="btn-admin">➕ Adicionar</button>
           </div>
-          <div id="listaExtras" class="grade-horarios" style="margin-top:8px;"></div>
+          <div id="listaExtras" style="margin-top:8px; display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;">
+          </div>
 
           <div class="modal-botoes" style="margin-top:16px;">
             <button type="button" onclick="salvarConfiguracao()">💾 Salvar</button>

@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://agendamento-preventivo-api.onrender.com";
 const SENHA_CORRETA = "3012";
 const SENHA_ADMIN = "3012";
 let horariosAdmin = [];

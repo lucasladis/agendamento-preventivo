@@ -3,6 +3,7 @@ const SENHA_CORRETA = "3012";
 const SENHA_ADMIN = "3012";
 let horariosAdmin = [];
 let extrasAdmin = [];
+let vagasAdmin = {}; // vagas por horário
 
 // ==================== AGENDAMENTO ====================
 
@@ -281,6 +282,7 @@ function abrirAdmin() {
   document.getElementById("dataAdmin").value = "";
   horariosAdmin = [];
   extrasAdmin = [];
+  vagasAdmin = {};
 }
 
 function fecharAdmin() {
@@ -340,6 +342,45 @@ async function carregarConfiguracao() {
     alert("Erro ao carregar configuração!");
     console.error(err);
   }
+
+  const padrao = gerarHorariosPadrao();
+  horariosDiv.innerHTML = "";
+
+  padrao.forEach(h => {
+    const vagas = vagasAdmin[h] || 1;
+
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("horario-admin-item");
+
+    const btn = document.createElement("button");
+    btn.textContent = h;
+    btn.classList.add("btn-horario");
+    btn.type = "button";
+
+    if (horariosAdmin.includes(h)) {
+      btn.classList.add("ocupado");
+    } else {
+      btn.classList.add("liberado");
+    }
+
+    btn.addEventListener("click", () => toggleBloqueio(h, btn));
+
+    const inputVagas = document.createElement("input");
+    inputVagas.type = "number";
+    inputVagas.min = "1";
+    inputVagas.max = "10";
+    inputVagas.value = vagas;
+    inputVagas.classList.add("input-vagas");
+    inputVagas.title = "Vagas disponíveis";
+    inputVagas.addEventListener("change", () => {
+      vagasAdmin[h] = parseInt(inputVagas.value) || 1;
+    });
+
+    wrapper.appendChild(btn);
+    wrapper.appendChild(inputVagas);
+    horariosDiv.appendChild(wrapper);
+  });
+
 }
 
 function toggleBloqueio(horario, btn) {
@@ -418,7 +459,7 @@ async function salvarConfiguracao() {
     const response = await fetch(`${API_URL}/configuracao`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data, bloqueados: horariosAdmin, extras: extrasAdmin })
+      body: JSON.stringify({ data, bloqueados: horariosAdmin, extras: extrasAdmin, vagas: vagasAdmin })
     });
 
     const result = await response.json();

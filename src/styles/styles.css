@@ -554,3 +554,27 @@ span.flatpickr-weekday {
 .flatpickr-day.dia-disponivel:not(.selected):hover {
   background: #e9d5ff !important;
 }
+
+.horario-admin-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.input-vagas {
+  width: 100%;
+  padding: 4px;
+  border-radius: 6px;
+  border: 1.5px solid #e9d5ff;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+.input-vagas:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.12);
+}

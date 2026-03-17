@@ -79,16 +79,29 @@ app.get("/agendamentos", async (req, res) => {
 
 //? ROTA PARA HORARIOS  
 
-app.get("/horarios/:data", async (req, res) => {
+app.get("/horarios/:data", async (req,res) => {
   try {
-    const agendamentos = await Agendamento.find({
-      datanasc: req.params.data
-    });
-    const horariosOcupados = agendamentos.map(a => a.hora);
-    res.json(horariosOcupados);
-  } catch (error) {
-    res.status(500).json({ error: err.message });
+    const agendamentos = await Agendamento.find( { datanasc: req.params.data } );
+    const config = await Configuracao.findOne({ data: req.params.data });
 
+    // conta quantos agendamentos tem por hora
+
+    const contagem = {};
+    agendamentos.forEach(a => {
+      contagem[a.hora] = (contagem[a.hora] || 0) + 1;
+    });
+
+    // verifica os horarios que estão cheios
+
+    const ocupados = [];
+    for (const [hora, count] of Object.entries(contagem)) {
+      const vagas = config?.vagas?.get(hora) || 1;
+      if (count >= 1) ocupados.push(hora);
+    }
+  }
+
+  catch(error) {
+    res.status(500).json({ error: err.message })
   }
 })
 
@@ -96,6 +109,7 @@ const Configuracao = mongoose.model("Configuracao", {
   data: String,
   bloqueados: [String],
   extras: [String],
+  vagas: { type: Map, of: Number, default: {}} // Ex: 07:00: 2
 });
 
 // Buscar configuração de um dia
@@ -114,11 +128,11 @@ app.get("/configuracao/:data", async (req, res) => {
 // Salvar configuração de um dia
 app.post("/configuracao", async (req, res) => {
   try {
-    const { data, bloqueados, extras } = req.body;
+    const { data, bloqueados, extras, vagas } = req.body;
     await Configuracao.findOneAndUpdate(
       { data },
-      { bloqueados, extras },
-      { upsert: true, returnDocument: 'after' } // ← troque 'new: true' por isso
+      { bloqueados, extras, vagas },
+      { upsert: true, returnDocument: "after" }
     );
     res.json({ message: "Configuração salva com sucesso!" });
   } catch (err) {

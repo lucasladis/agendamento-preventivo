@@ -84,6 +84,8 @@ app.get("/horarios/:data", async (req, res) => {
     const agendamentos = await Agendamento.find({ datanasc: req.params.data });
     const config = await Configuracao.findOne({ data: req.params.data });
 
+    console.log("Config encontrada:", JSON.stringify(config)); // ← adicione isso
+
     const contagem = {};
     agendamentos.forEach(a => {
       contagem[a.hora] = (contagem[a.hora] || 0) + 1;
@@ -91,11 +93,12 @@ app.get("/horarios/:data", async (req, res) => {
 
     const ocupados = [];
     for (const [hora, count] of Object.entries(contagem)) {
-      const vagas = config?.vagas?.get(hora) || 1; // ← usa as vagas configuradas
-      if (count >= vagas) ocupados.push(hora); // ← corrigido!
+      const vagas = config?.vagas?.get(hora) || 1;
+      console.log(`Hora: ${hora}, Count: ${count}, Vagas: ${vagas}`); // ← e isso
+      if (count >= vagas) ocupados.push(hora);
     }
 
-    res.json(ocupados); // ← faltava isso!
+    res.json(ocupados);
 
   } catch (err) {
     res.status(500).json({ erro: err.message });

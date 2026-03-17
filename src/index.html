@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agendamento Preventivo</title>
+  <link rel="stylesheet" href="./styles/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+</head>
+
+<body>
+
+  <img src="Design sem nome.png" alt="imagempreventivo" class="imagem-topo" />
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <span class="navbar-titulo">Agendamento Preventivo</span>
+    <button class="hamburger" id="btnHamburger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Menu dropdown -->
+  <div id="menuDropdown" class="menu-dropdown" style="display:none;">
+    <button onclick="abrirModal(); fecharMenu()">🔒 Ver Agendamentos</button>
+    <button onclick="abrirAdmin(); fecharMenu()">⚙️ Gerenciar Dias</button>
+  </div>
+
+  <div class="container">
+
+    <!-- Card do formulário -->
+    <div class="card">
+      <h1>Agendamento de Preventivo</h1>
+      <p class="subtitulo">Bambé / Campo Novo</p>
+
+      <div class="formulario">
+
+        <div class="campo span2">
+          <label for="nome">Nome completo</label>
+          <input type="text" id="nome" placeholder="Nome completo" oninput="this.value = this.value.toUpperCase()" />
+        </div>
+
+        <div class="campo">
+          <label for="telefone">Telefone</label>
+          <input type="tel" id="telefone" placeholder="(00) 00000-0000" />
+        </div>
+
+        <div class="campo">
+          <label for="ama">Código AMA</label>
+          <input type="text" id="ama" placeholder="Ex: 123456" oninput="this.value = this.value.toUpperCase()" />
+        </div>
+
+        <div class="campo span2">
+          <label for="dataAgendamento">Data do agendamento</label>
+          <input type="text" id="dataAgendamento" placeholder="Selecione uma data disponível" readonly />
+        </div>
+
+        <div class="campo span2">
+          <label>Horário disponível</label>
+          <div id="gradeHorarios" class="grade-horarios">
+            <p class="vazio">Selecione uma data primeiro.</p>
+          </div>
+          <input type="hidden" id="hora" />
+        </div>
+
+        <div class="campo span2">
+          <label for="ultimop">Último preventivo</label>
+          <input type="text" id="ultimop" placeholder="Ex: 2023" oninput="this.value = this.value.toUpperCase()" />
+        </div>
+
+        <button type="button" onclick="agendar()">Agendar</button>
+
+      </div>
+    </div>
+
+    <!-- Modal de senha -->
+    <div id="modal" class="modal-overlay" style="display:none;">
+      <div class="modal-box">
+        <h2>🔐 Acesso Restrito</h2>
+        <p>Digite a senha para visualizar os agendamentos</p>
+        <input type="password" id="senhaInput" placeholder="Digite a senha" />
+        <div class="modal-botoes">
+          <button type="button" onclick="verificarSenha()">Entrar</button>
+          <button type="button" onclick="fecharModal()" class="btn-cancelar">Cancelar</button>
+        </div>
+        <p id="erroSenha" style="color:red; display:none;">Senha incorreta!</p>
+      </div>
+    </div>
+
+    <!-- Card de agendamentos -->
+    <div class="card lista-card" id="cardAgendamentos" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2>Agendamentos</h2>
+        <button type="button" onclick="fecharAgendamentos()" class="btn-cancelar">✖ Fechar</button>
+      </div>
+
+      <!-- Filtro por data -->
+      <div class="campo" style="margin: 16px 0;">
+        <label>Filtrar por data</label>
+        <input type="text" id="dataFiltro" placeholder="Selecione uma data" readonly />
+      </div>
+
+      <div id="listaAgendamento" class="lista-agendamento">
+        <p class="vazio">Selecione uma data para ver os agendamentos.</p>
+      </div>
+    </div>
+
+    <!-- Modal Admin -->
+    <div id="modalAdmin" class="modal-overlay" style="display:none;">
+      <div class="modal-box" style="width:520px; max-width:95vw;">
+        <h2>⚙️ Gerenciar Dias</h2>
+
+        <div class="campo">
+          <label for="dataAdmin">Selecione o dia</label>
+          <input type="date" id="dataAdmin" onchange="carregarConfiguracao()" />
+        </div>
+
+        <div id="statusDia" style="display:none;">
+
+          <p id="avisoFimSemana" style="color:red; display:none;">
+            ⚠️ Finais de semana não são permitidos!
+          </p>
+
+          <label style="margin-top:12px;">Horários padrão — clique para bloquear/desbloquear</label>
+          <div id="horariosAdmin" class="grade-horarios" style="margin-top:8px;"></div>
+
+          <label style="margin-top:16px;">Adicionar horário extra (fora de 7h às 16h)</label>
+          <div style="display:flex; gap:8px; margin-top:6px;">
+            <input type="time" id="horarioExtra"
+              style="flex:1; padding:10px; border-radius:10px; border:1.5px solid #e5e7eb; font-size:14px; outline:none;" />
+            <button type="button" onclick="adicionarExtra()" class="btn-admin">➕ Adicionar</button>
+          </div>
+          <div id="listaExtras" class="grade-horarios" style="margin-top:8px;"></div>
+
+          <div class="modal-botoes" style="margin-top:16px;">
+            <button type="button" onclick="salvarConfiguracao()">💾 Salvar</button>
+            <button type="button" onclick="fecharAdmin()" class="btn-cancelar">Cancelar</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="./javascript/script.js"></script>
+
+  <script>
+    const btnHamburger = document.getElementById("btnHamburger");
+    const menuDropdown = document.getElementById("menuDropdown");
+
+    btnHamburger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const aberto = menuDropdown.style.display === "block";
+      menuDropdown.style.display = aberto ? "none" : "block";
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!menuDropdown.contains(e.target) && !btnHamburger.contains(e.target)) {
+        menuDropdown.style.display = "none";
+      }
+    });
+
+    function fecharMenu() {
+      menuDropdown.style.display = "none";
+    }
+  </script>
+
+</body>
+
+</html>

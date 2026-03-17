@@ -277,15 +277,16 @@ function abrirAdmin() {
     alert("❌ Senha incorreta!");
     return;
   }
+  document.querySelector(".navbar").style.display = "none"; // ← esconde
   document.getElementById("modalAdmin").style.display = "flex";
   document.getElementById("statusDia").style.display = "none";
   document.getElementById("dataAdmin").value = "";
   horariosAdmin = [];
   extrasAdmin = [];
-  vagasAdmin = {};
 }
 
 function fecharAdmin() {
+  document.querySelector(".navbar").style.display = "flex"; // ← mostra
   document.getElementById("modalAdmin").style.display = "none";
 }
 
